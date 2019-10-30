@@ -8,8 +8,6 @@ object TransactionStatus extends Enumeration {
 
 class TransactionQueue {
 
-    // TODO
-    // project task 1.1
     // Add datastructure to contain the transactions
     private val transactionQueue = new mutable.Queue[Transaction]
 
@@ -36,33 +34,27 @@ class Transaction(val transactionsQueue: TransactionQueue,
                   val amount: Double,
                   val allowedAttemps: Int) extends Runnable {
 
-  var status: TransactionStatus.Value = TransactionStatus.PENDING
-  var attempt = 0
+    var status: TransactionStatus.Value = TransactionStatus.PENDING
+    var attempt = 0
 
-  override def run: Unit = {
+    override def run(): Unit = {
 
-      def doTransaction() = {
+        def doTransaction(): Unit = this.synchronized{
 
-          val attemptWithdraw = from.withdraw(amount)
-          if(attemptWithdraw.isRight){
-              val attemptDeposit = to.deposit(amount)
-              if(!attemptDeposit.isRight){
-                  from.deposit(amount)
-                  status = TransactionStatus.FAILED
-              }
-              else status = TransactionStatus.SUCCESS
-          }
-      }
+            if(this.from.withdraw(this.amount).isLeft){
+                if(this.to.deposit(this.amount).isLeft){    //If this fails. make sure to deposit the money back.
+                    this.status = TransactionStatus.SUCCESS
+                }
+                else this.from.deposit(this.amount)    //Deposits the money back after a failed deposit to the other account.
+            }
+        }
 
-      // TODO - project task 3
-      // make the code below thread safe
-      if (status == TransactionStatus.PENDING) {
-          attempt += 1
-          doTransaction
-          Thread.sleep(50) // you might want this to make more room for
+        if (this.status == TransactionStatus.PENDING && this.attempt < allowedAttemps) {
+            this.attempt += 1
+            doTransaction()    //Retry transaction.
+            Thread.sleep(50) // you might want this to make more room for
                            // new transactions to be added to the queue
-      }
-
-
+        }
+        else this.status = TransactionStatus.FAILED
     }
 }
