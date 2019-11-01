@@ -56,6 +56,7 @@ class Task2 {
         printThread.join()
     }
 
+
     /*
     Task 2C continuation
     This task threw me for a loop. I first tried adding "this.synchronized to the increaseCounter function, like so:
@@ -63,7 +64,7 @@ class Task2 {
       counter.synchronized {counter += 1}
     }
 
-    However, the race condition still occured, although more rarely. Adding synchronized to a function makes it so that
+    However, the results still varied, although more rarely. Adding synchronized to a function makes it so that
     the two calls to increaseCounter won't overlap, but there's still a chance that the thread that prints the counter
     value will be called before one of the threads containing increaseCounter. I therefore decided to join the two
     increaseCounter-threads to the parent thread before the print-thread could run, so that it would always print 2.
@@ -97,7 +98,6 @@ class Task2 {
     whilst the other thread is waiting for A to be initialized, thus creating a deadlock.
     Please note: This won't always result in a deadlock.
      */
-
     def lazyDeadlock(): Unit = {
         object A {
             lazy val a1 = 10

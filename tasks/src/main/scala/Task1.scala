@@ -14,6 +14,7 @@ class Task1 {
         arr    //Return array.
     }
 
+
     /*
     Task 1B
     Takes in an array of integers and returns the sum of the elements in the array.
@@ -26,6 +27,7 @@ class Task1 {
         sum
     }
 
+
     /*
     Task 1C
     Returns the sum of the elements of an array recursively by using a helper function to achieve tail recursion.
@@ -35,6 +37,7 @@ class Task1 {
         sumArray_recursively_helper(0, arr)
     }
 
+
     /*
     Helper function for task 1C
     */
@@ -42,6 +45,7 @@ class Task1 {
         if(arr.length == 1) sum + arr(0)    //Last element of the array (exit condition). Returns the final sum.
         else sumArray_recursively_helper(sum + arr(0), arr.drop(1))    //Calculate sum + first element of array, drop first array element for next recursive call.
     }
+
 
     /*
     Task 1D

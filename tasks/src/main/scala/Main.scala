@@ -38,8 +38,4 @@ object Main extends App {
     println("\nTask 2D:")
     println("This MIGHT cause a deadlock.")
     t2.lazyDeadlock()
-
-
-
-
 }
